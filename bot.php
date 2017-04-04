@@ -1,37 +1,52 @@
+// /callback/index.php
 <?php
-/**
- * Copyright 2016 LINE Corporation
- *
- * LINE Corporation licenses this file to you under the Apache License,
- * version 2.0 (the "License"); you may not use this file except in compliance
- * with the License. You may obtain a copy of the License at:
- *
- *   https://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
- * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
- * License for the specific language governing permissions and limitations
- * under the License.
- */
-namespace LINE\LINEBot\EchoBot;
-class Setting
-{
-    public static function getSetting()
-    {
-        return [
-            'settings' => [
-                'displayErrorDetails' => true, // set to false in production
-                'logger' => [
-                    'name' => 'slim-app',
-                    'path' => __DIR__ . '/../../../logs/app.log',
-                ],
-                'bot' => [
-                    'channelToken' => getenv('LINEBOT_CHANNEL_TOKEN') ?: '<your channel token>',
-                    'channelSecret' => getenv('LINEBOT_CHANNEL_SECRET') ?: '<your channel secret>',
-                ],
-                'apiEndpointBase' => getenv('LINEBOT_API_ENDPOINT_BASE'),
-            ],
-        ];
-    }
+// Show all errors for testing
+error_reporting(E_ALL);
+
+// SDK is installed via composer
+require_once __DIR__ . "/includes/vendor/autoload.php";
+
+use LINE\LINEBot;
+use LINE\LINEBot\HTTPClient\GuzzleHTTPClient;
+
+// Set these
+$config = [
+    'channelId' => LINE_CHANNEL_ID,
+    'channelSecret' => LINE_CHANNEL_SECRET,
+    'channelMid' => LINE_CHANNEL_MID,
+];
+$sdk = new LINEBot($config, new GuzzleHTTPClient($config));
+
+$postdata = @file_get_contents("php://input");
+$messages = $sdk->createReceivesFromJSON($postdata);
+
+// Verify the signature
+// REF: http://line.github.io/line-bot-api-doc/en/api/callback/post.html#signature-verification
+$sigheader = 'X-LINE-ChannelSignature';
+// REF: http://stackoverflow.com/a/541450
+$signature = @$_SERVER[ 'HTTP_'.strtoupper(str_replace('-','_',$sigheader)) ];
+if($signature && $sdk->validateSignature($postdata, $signature)) {
+    // Next, extract the messages
+    if(is_array($messages)) {
+        foreach ($messages as $message) {
+            if ($message instanceof LINEBot\Receive\Message\Text) {
+                $text = $message->getText();
+                if ($text == "mid") {
+                    $fromMid = $message->getFromMid();
+
+                    // Send the mid back to the sender and check if the message was delivered
+                    $result = $sdk->sendText([$fromMid], 'mid: ' . $fromMid);
+                    if(!$result instanceof LINE\LINEBot\Response\SucceededResponse) {
+                        error_log('LINE error: ' . json_encode($result));
+                    }
+                } else {
+                    // Process normally, or do nothing
+                }
+            } else {
+                // Process other types of LINE messages like image, video, sticker, etc.
+            }
+        }
+    } // Else, error
+} else {
+    error_log('LINE signatures didn\'t match');
 }
