@@ -58,7 +58,7 @@ if (strpos($_msg, 'สอนAD') !== false) {
     $arrPostData = array();
     $arrPostData['replyToken'] = $arrJson['events'][0]['replyToken'];
     $arrPostData['messages'][0]['type'] = "text";
-    $arrPostData['messages'][0]['text'] = 'ตะเองเค้าไม่รู้คำตอบอ่ะ ตัวเองสอนให้เค้าได้นะเพียงพิมพ์: สอน AD[คำถาม|คำตอบ]พิมพ์ให้ถูกต้องนะตัวเอง(ah...)(ah...)(ah...)';
+    $arrPostData['messages'][0]['text'] = 'ตะเองเค้าไม่รู้คำตอบอ่ะ ตัวเองสอนให้เค้าได้นะเพียงพิมพ์: สอน AD[คำถาม|คำตอบ]พิมพ์ให้ถูกต้องนะตัวเอง';
   }
 }
 
