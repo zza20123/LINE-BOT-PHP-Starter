@@ -73,35 +73,4 @@ curl_setopt($channel, CURLOPT_RETURNTRANSFER,true);
 curl_setopt($channel, CURLOPT_SSL_VERIFYPEER, false);
 $result = curl_exec($channel);
 curl_close ($channel);
-{
-  "type": "123",
-  "baseUrl": "https://www.google.co.th/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=0ahUKEwjo55_vy8bUAhWJvY8KHXvMBWkQjRwIBw&url=https%3A%2F%2Fth.etoren.com%2Fproducts%2Fsamsung-galaxy-s8-plus-dual-sim-g955fd-64gb-gold&psig=AFQjCNFt2uGfwrPFGWAHAEoHncadt51BGQ&ust=1497847755015712",
-  "altText": "this is an imagemap",
-  "baseSize": {
-      "height": 1040,
-      "width": 1040
-  },
-  "actions": [
-      {
-          "type": "uri",
-          "linkUri": "https://www.google.co.th/url?sa=i&rct=j&q=&esrc=s&source=images&cd=&cad=rja&uact=8&ved=0ahUKEwjo55_vy8bUAhWJvY8KHXvMBWkQjRwIBw&url=https%3A%2F%2Fth.etoren.com%2Fproducts%2Fsamsung-galaxy-s8-plus-dual-sim-g955fd-64gb-gold&psig=AFQjCNFt2uGfwrPFGWAHAEoHncadt51BGQ&ust=1497847755015712",
-          "area": {
-              "x": 0,
-              "y": 0,
-              "width": 520,
-              "height": 1040
-          }
-      },
-      {
-          "type": "message",
-          "text": "hello",
-          "area": {
-              "x": 520,
-              "y": 0,
-              "width": 520,
-              "height": 1040
-          }
-      }
-  ]
-}
 ?>
