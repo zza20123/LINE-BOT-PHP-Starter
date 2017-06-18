@@ -45,3 +45,4 @@ if (!is_null($events['events'])) {
 	}
 }
 echo "OK ตามนั้นนะ ";
+$response = $bot->replyText('<reply token>', 'hello!');
